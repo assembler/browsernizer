@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Milovan Zogovic"]
   s.email       = ["milovan.zogovic@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Unsupported browser redirection}
+  s.description = %q{Rack middleware for redirecting unsupported browser requests to "please upgrade" page}
 
   s.rubyforge_project = "browsernizer"
 
