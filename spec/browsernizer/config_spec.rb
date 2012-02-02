@@ -21,8 +21,8 @@ describe Browsernizer::Config do
 
   describe "location(path)" do
     it "sets the redirection path for unsupported browsers" do
-      subject.location "foo.bar"
-      subject.get_location.should == "foo.bar"
+      subject.location "foo.html"
+      subject.get_location.should == "foo.html"
     end
   end
 
