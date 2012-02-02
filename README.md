@@ -18,6 +18,31 @@ Hook it up:
 
 Configure browser support in `config/initializers/browsernizer.rb` file.
 
+All browsers that are not listed in initializer file will be considered to be **supported**.
+
+
+## Browsers
+
+You should specify browser name as a string. Here are the available options:
+
+* Chrome
+* Firefox
+* Safari
+* Opera
+* Internet Explorer
+
+And some less popular:
+
+* Android
+* webOS
+* BlackBerry
+* Symbian
+* Camino
+* Iceweasel
+* Seamonkey
+
+Browser detection is done using [useragent gem](https://github.com/josh/useragent).
+
 
 
 ## Credits and License
