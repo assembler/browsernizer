@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["milovan.zogovic@gmail.com"]
   s.homepage    = ""
   s.summary     = %q{Want friendly "please upgrade your browser" page? This gem is for you.}
-  s.description = %q{Rack middleware for redirecting unsupported browser requests to "please upgrade" page}
+  s.description = %q{Rack middleware for redirecting unsupported user agents to "please upgrade" page}
 
   s.rubyforge_project = "browsernizer"
 
