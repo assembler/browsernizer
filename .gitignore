@@ -1,4 +1,5 @@
 .rvmrc
+.rspec
 *.gem
 .bundle
 Gemfile.lock
