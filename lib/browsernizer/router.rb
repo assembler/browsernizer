@@ -32,7 +32,13 @@ module Browsernizer
     def unsupported?
       agent = ::UserAgent.parse @env["HTTP_USER_AGENT"]
       @config.get_supported.detect do |supported_browser|
-        agent < supported_browser
+        if agent.browser.to_s.downcase == supported_browser.browser.to_s.downcase
+          a = BrowserVersion.new agent.version.to_s
+          b = BrowserVersion.new supported_browser.version.to_s
+          a < b
+        end
+        # TODO: when useragent is fixed you can use just this line instead the above
+        # agent < supported_browser
       end
     end
   end
