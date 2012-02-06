@@ -5,7 +5,9 @@ require 'bundler/setup' if File.exists?(ENV['BUNDLE_GEMFILE'])
 
 
 require "browsernizer/browser"
+require "browsernizer/browser_version"
 require "browsernizer/config"
 require "browsernizer/router"
 require "browsernizer/version"
+
 require 'useragent'
