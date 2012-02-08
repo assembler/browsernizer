@@ -4,13 +4,6 @@ describe Browsernizer::Config do
 
   subject { config = Browsernizer::Config.new }
 
-  describe "new" do
-    it "sets the defaults" do
-      subject.get_supported.should == []
-      subject.get_location.should == "/unsupported-browser.html"
-    end
-  end
-
   describe "supported(name, version)" do
     it "defines new supported browser" do
       subject.supported "Chrome", "16.0"

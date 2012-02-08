@@ -3,7 +3,8 @@ module Browsernizer
 
     def initialize
       @supported = []
-      @location = "/unsupported-browser.html"
+      @location = nil
+      @handler = lambda { }
     end
 
     def supported(browser, version)
