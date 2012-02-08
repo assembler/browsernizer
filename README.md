@@ -32,12 +32,28 @@ Initializer file is pretty self explanatory. Here is the default one:
     end
 
 It states that IE9+, FF4+, Opera 11.1+ and Chrome 7+ are supported.
-Non listed browsers will be considered to be supported regardless of their version.
+Non listed browsers are considered to be supported regardless of their version.
 Unsupported browsers will be redirected to `/browser.html` page.
 
 If you wish to completely prevent some browsers from accessing website
 (regardless of their version), for now you can specify some really high
 version number (e.g. "666").
+
+Specifying location is optional. If you prefer handling unsupported browsers on
+your own, you can access browsernizer info from `request.env['browsernizer']`
+within your controller.
+
+For example, you can set before filter to display flash notice:
+
+    before_filter :check_browser_support
+
+    def check_browser_support
+      unless request.env['browsernizer']['supported']
+        flash.notice = "Your browser is not supported"
+      end
+    end
+
+You can also access `browser` and `version` variables from this env hash.
 
 
 ## Browsers
