@@ -8,7 +8,6 @@ describe Browsernizer::Router do
     Browsernizer::Router.new(app) do |config|
       config.supported "Firefox", "4"
       config.supported "Chrome", "7.1"
-      config.location  "/browser.html"
     end
   end
 
@@ -21,8 +20,14 @@ describe Browsernizer::Router do
   end
 
   context "All Good" do
-    it "propagates request" do
-      app.should_receive(:call).with(default_env)
+    it "sets browsernizer env and propagates request" do
+      response = default_env.dup
+      response['browsernizer'] = {
+        'supported' => true,
+        'browser' => "Chrome",
+        'version' => "7.1.1"
+      }
+      app.should_receive(:call).with(response)
       subject.call(default_env)
     end
   end
@@ -34,15 +39,30 @@ describe Browsernizer::Router do
       })
     end
 
-    it "prevents propagation" do
-      app.should_not_receive(:call)
+    it "updates 'browsernizer' env variable and propagates request" do
+      @response = @env.dup
+      @response['browsernizer'] = {
+        'supported' => false,
+        'browser' => "Chrome",
+        'version' => "7"
+      }
+      app.should_receive(:call).with(@response)
       subject.call(@env)
     end
 
-    it "redirects to proper location" do
-      response = subject.call(@env)
-      response[0].should == 307
-      response[1]["Location"].should == "/browser.html"
+    context "location is set" do
+      before do
+        subject.config.location "/browser.html"
+      end
+      it "prevents propagation" do
+        app.should_not_receive(:call)
+        subject.call(@env)
+      end
+      it "redirects to proper location" do
+        response = subject.call(@env)
+        response[0].should == 307
+        response[1]["Location"].should == "/browser.html"
+      end
     end
 
     context "Non-html request" do
