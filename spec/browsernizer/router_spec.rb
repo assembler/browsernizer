@@ -63,6 +63,19 @@ describe Browsernizer::Router do
         response[0].should == 307
         response[1]["Location"].should == "/browser.html"
       end
+
+      context "Excluded path" do
+        before do
+          subject.config.exclude %r{^/assets}
+          @env = @env.merge({
+            "PATH_INFO" => "/assets/foo.jpg",
+          })
+        end
+        it "propagates request" do
+          app.should_receive(:call).with(@env)
+          subject.call(@env)
+        end
+      end
     end
 
     context "Non-html request" do
@@ -75,7 +88,21 @@ describe Browsernizer::Router do
         app.should_receive(:call).with(@env)
         subject.call(@env)
       end
+
+      context "exclusions defined" do
+        before do
+          subject.config.exclude %r{^/assets}
+          subject.config.location "/browser.html"
+        end
+        it "handles the request" do
+          app.should_not_receive(:call).with(@env)
+          response = subject.call(@env)
+          response[0].should == 307
+          response[1]["Location"].should == "/browser.html"
+        end
+      end
     end
+
 
     context "Already on /browser.html page" do
       before do

@@ -16,24 +16,33 @@ module Browsernizer
         "browser" => agent.browser.to_s,
         "version" => agent.version.to_s
       }
-
-      if html_request? && !on_redirection_path? && unsupported?
-        handle_unsupported
-      elsif html_request? && on_redirection_path? && !unsupported?
-        handle_visits_by_accident
-      else
-        @app.call(env)
-      end
+      handle_request
     end
 
   private
+    def handle_request
+      if !html_request? || path_excluded?
+        propagate_request
+      elsif !on_redirection_path? && unsupported?
+        handle_unsupported
+      elsif on_redirection_path? && !unsupported?
+        handle_visits_by_accident
+      else
+        propagate_request
+      end
+    end
+
+    def propagate_request
+      @app.call(@env)
+    end
+
     def handle_unsupported
       @env["browsernizer"]["supported"] = false
 
       if @config.get_location
         [307, {"Content-Type" => "text/plain", "Location" => @config.get_location}, []]
       else
-        @app.call(@env)
+        propagate_request
       end
     end
 
@@ -41,8 +50,14 @@ module Browsernizer
       [303, {"Content-Type" => "text/plain", "Location" => "/"}, []]
     end
 
+    # if exclusions are defined, we'll be ignoring HTTP_ACCEPT header
     def html_request?
+      return true if @config.exclusions_defined?
       @env["HTTP_ACCEPT"] && @env["HTTP_ACCEPT"].include?("text/html")
+    end
+
+    def path_excluded?
+      @config.excluded? @env["PATH_INFO"]
     end
 
     def on_redirection_path?
