@@ -37,10 +37,6 @@ It states that IE9+, FF4+, Opera 11.1+ and Chrome 7+ are supported.
 Non listed browsers are considered to be supported regardless of their version.
 Unsupported browsers will be redirected to `/browser.html` page.
 
-By default, only requests with `HTTP_ACCEPT` header set to `text/html` are
-processed. Sometimes this header is not set by the browser. To overcome this
-issue, the `exclude` option is added to the config.
-
 You can specify which paths you wish to exclude with `exclude` method.
 It accepts string or regular expression. You can specify multiple paths by
 calling the `config.exclude` multiple times.
