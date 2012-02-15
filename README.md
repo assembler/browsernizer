@@ -42,8 +42,9 @@ It accepts string or regular expression. You can specify multiple paths by
 calling the `config.exclude` multiple times.
 
 If you wish to completely prevent some browsers from accessing website
-(regardless of their version), for now you can specify some really high
-version number (e.g. "666").
+(regardless of their version), just set browser version to `false`.
+
+    config.supported "Internet Explorer", false
 
 Specifying location is optional. If you prefer handling unsupported browsers on
 your own, you can access browsernizer info from `request.env['browsernizer']`
