@@ -10,6 +10,11 @@ describe Browsernizer::Config do
       subject.supported "Firefox", "10.0"
       subject.get_supported.should have(2).items
     end
+
+    it "allows to unsupport browser by using false as version number" do
+      subject.supported "Chrome", false
+      subject.get_supported[0].version.should be_false
+    end
   end
 
   describe "location(path)" do
