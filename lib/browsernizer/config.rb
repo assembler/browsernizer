@@ -39,9 +39,5 @@ module Browsernizer
       end
     end
 
-    def exclusions_defined?
-      @exclusions.length > 0
-    end
-
   end
 end

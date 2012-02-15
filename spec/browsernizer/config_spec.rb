@@ -29,8 +29,6 @@ describe Browsernizer::Config do
       subject.excluded?("/prefix/assets/foo.jpg").should be_false
       subject.excluded?("/foo/bar.html").should be_true
       subject.excluded?("/foo/bar2.html").should be_false
-
-      subject.exclusions_defined?.should be_true
     end
   end
 
