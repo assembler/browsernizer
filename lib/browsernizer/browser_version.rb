@@ -20,5 +20,9 @@ module Browsernizer
       0
     end
 
+    def to_s
+      @version
+    end
+
   end
 end
