@@ -21,13 +21,18 @@ module Browsernizer
 
   private
     def handle_request
-      if !html_request? || path_excluded?
-        propagate_request
-      elsif !on_redirection_path? && unsupported?
-        handle_unsupported
-      elsif on_redirection_path? && !unsupported?
-        handle_visits_by_accident
-      else
+      @env["browsernizer"]["supported"] = false if unsupported?
+
+      catch(:response) do
+        if !path_excluded?
+          if unsupported?
+            if !on_redirection_path? && @config.get_location
+              throw :response, redirect_to_specified
+            end
+          elsif on_redirection_path?
+            throw :response, redirect_to_root
+          end
+        end
         propagate_request
       end
     end
@@ -36,24 +41,12 @@ module Browsernizer
       @app.call(@env)
     end
 
-    def handle_unsupported
-      @env["browsernizer"]["supported"] = false
-
-      if @config.get_location
-        [307, {"Content-Type" => "text/plain", "Location" => @config.get_location}, []]
-      else
-        propagate_request
-      end
+    def redirect_to_specified
+      [307, {"Content-Type" => "text/plain", "Location" => @config.get_location}, []]
     end
 
-    def handle_visits_by_accident
+    def redirect_to_root
       [303, {"Content-Type" => "text/plain", "Location" => "/"}, []]
-    end
-
-    # if exclusions are defined, we'll be ignoring HTTP_ACCEPT header
-    def html_request?
-      return true if @config.exclusions_defined?
-      @env["HTTP_ACCEPT"] && @env["HTTP_ACCEPT"].include?("text/html")
     end
 
     def path_excluded?
@@ -61,7 +54,7 @@ module Browsernizer
     end
 
     def on_redirection_path?
-      @env["PATH_INFO"] && @env["PATH_INFO"] == @config.get_location
+      @config.get_location && @config.get_location == @env["PATH_INFO"]
     end
 
     def agent

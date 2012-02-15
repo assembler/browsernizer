@@ -14,7 +14,6 @@ describe Browsernizer::Router do
   let(:default_env) do
     {
       "HTTP_USER_AGENT" => chrome_agent("7.1.1"),
-      "HTTP_ACCEPT" => "text/html",
       "PATH_INFO" => "/index"
     }
   end
@@ -76,45 +75,20 @@ describe Browsernizer::Router do
           subject.call(@env)
         end
       end
-    end
 
-    context "Non-html request" do
-      before do
-        @env = @env.merge({
-          "HTTP_ACCEPT" => "text/css"
-        })
-      end
-      it "propagates request" do
-        app.should_receive(:call).with(@env)
-        subject.call(@env)
-      end
-
-      context "exclusions defined" do
+      context "Already on /browser.html page" do
         before do
-          subject.config.exclude %r{^/assets}
-          subject.config.location "/browser.html"
+          @env = @env.merge({
+            "PATH_INFO" => "/browser.html"
+          })
         end
-        it "handles the request" do
-          app.should_not_receive(:call).with(@env)
-          response = subject.call(@env)
-          response[0].should == 307
-          response[1]["Location"].should == "/browser.html"
+        it "propagates request" do
+          app.should_receive(:call).with(@env)
+          subject.call(@env)
         end
       end
     end
 
-
-    context "Already on /browser.html page" do
-      before do
-        @env = @env.merge({
-          "PATH_INFO" => "/browser.html"
-        })
-      end
-      it "propagates request" do
-        app.should_receive(:call).with(@env)
-        subject.call(@env)
-      end
-    end
   end
 
 
