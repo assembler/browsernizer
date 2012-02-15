@@ -13,7 +13,7 @@ module Browsernizer
       @env = env
       @env["browsernizer"] = {
         "supported" => true,
-        "browser" => agent.browser.to_s,
+        "browser" => agent.name.to_s,
         "version" => agent.version.to_s
       }
       handle_request
@@ -58,19 +58,14 @@ module Browsernizer
     end
 
     def agent
-      ::UserAgent.parse @env["HTTP_USER_AGENT"]
+      a = ::UserAgent.parse @env["HTTP_USER_AGENT"]
+      Browser.new a.browser.to_s, a.version.to_s
     end
 
     # supported by default
     def unsupported?
-      @config.get_supported.detect do |supported_browser|
-        if agent.browser.to_s.downcase == supported_browser.browser.to_s.downcase
-          a = BrowserVersion.new agent.version.to_s
-          b = BrowserVersion.new supported_browser.version.to_s
-          a < b
-        end
-        # TODO: when useragent is fixed you can use just this line instead the above
-        # agent < supported_browser
+      @config.get_supported.any? do |requirement|
+        agent.meets?(requirement) === false
       end
     end
   end
