@@ -9,7 +9,7 @@ module Browsernizer
     end
 
     def supported(browser, version)
-      @supported << Browser.new(browser.to_s, version.to_s)
+      @supported << Browser.new(browser, version)
     end
 
     def location(path)
