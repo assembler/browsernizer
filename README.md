@@ -91,5 +91,5 @@ Browser detection is done using [useragent gem](https://github.com/josh/useragen
 
 Developed by Milovan Zogovic.
 
-I don't believe in licenses and other legal crap.
-Do whatever you want with this :)
+This software is released under the Simplified BSD License.
+
