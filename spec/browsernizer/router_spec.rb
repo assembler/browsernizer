@@ -8,6 +8,9 @@ describe Browsernizer::Router do
     Browsernizer::Router.new(app) do |config|
       config.supported "Firefox", false
       config.supported "Chrome", "7.1"
+      config.supported do |agent|
+        !(agent.browser == "Safari" && agent.mobile?)
+      end
     end
   end
 
@@ -103,12 +106,25 @@ describe Browsernizer::Router do
     it_behaves_like "unsupported browser"
   end
 
+  context "Unsupported by proc" do
+    before do
+      @env = default_env.merge({
+        "HTTP_USER_AGENT" => mobile_safari_agent
+      })
+    end
+    it_behaves_like "unsupported browser"
+  end
+
   def chrome_agent(version)
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/#{version} Safari/535.7"
   end
 
   def firefox_agent(version)
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:10.0.1) Gecko/20100101 Firefox/#{version}"
+  end
+
+  def mobile_safari_agent
+    "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/4A102 Safari/419"
   end
 
 end

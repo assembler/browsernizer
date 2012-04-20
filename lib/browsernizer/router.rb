@@ -57,15 +57,23 @@ module Browsernizer
       @config.get_location && @config.get_location == @env["PATH_INFO"]
     end
 
+    def raw_agent
+      ::UserAgent.parse @env["HTTP_USER_AGENT"]
+    end
+
     def agent
-      a = ::UserAgent.parse @env["HTTP_USER_AGENT"]
-      Browser.new a.browser.to_s, a.version.to_s
+      Browser.new raw_agent.browser.to_s, raw_agent.version.to_s
     end
 
     # supported by default
     def unsupported?
       @config.get_supported.any? do |requirement|
-        agent.meets?(requirement) === false
+        supported = if requirement.respond_to?(:call)
+          requirement.call(raw_agent)
+        else
+          agent.meets?(requirement)
+        end
+        supported === false
       end
     end
   end
