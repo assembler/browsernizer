@@ -17,6 +17,18 @@ describe Browsernizer::Config do
     end
   end
 
+  describe "unsupported(name)" do
+    it "defines a new support entry for a browser" do
+      subject.unsupported "Firefox"
+      subject.get_supported.should have(1).item
+    end
+
+    it "defines an unsupported browser" do
+      subject.unsupported "Chrome"
+      subject.get_supported[0].version.should be_false
+    end
+  end
+
   describe "location(path)" do
     it "sets the redirection path for unsupported browsers" do
       subject.location "foo.html"

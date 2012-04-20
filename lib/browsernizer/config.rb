@@ -18,6 +18,10 @@ module Browsernizer
       end
     end
 
+    def unsupported(browser)
+      supported(browser, false)
+    end
+
     def location(path)
       @location = path
     end
