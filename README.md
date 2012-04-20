@@ -46,6 +46,15 @@ If you wish to completely prevent some browsers from accessing website
 
     config.supported "Internet Explorer", false
 
+There is also an option to provide block for more advanced checking.
+[UserAgent object](https://github.com/josh/useragent/tree/master/lib) will be
+passed to it. If you wish to state that *mobile safari* is not supported, you
+can declare it like this:
+
+    config.supported do |agent|
+      !(agent.browser == "Safari" && agent.mobile?)
+    end
+
 Specifying location is optional. If you prefer handling unsupported browsers on
 your own, you can access browsernizer info from `request.env['browsernizer']`
 within your controller.
