@@ -27,6 +27,11 @@ describe Browsernizer::Config do
       subject.unsupported "Chrome"
       subject.get_supported[0].version.should be_false
     end
+
+    it "allows to 'unsupport' multiple browsers at once" do
+      subject.unsupported %w(Firefox Chrome)
+      subject.get_supported.should have(2).items
+    end
   end
 
   describe "location(path)" do

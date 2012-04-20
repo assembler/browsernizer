@@ -18,8 +18,12 @@ module Browsernizer
       end
     end
 
-    def unsupported(browser)
-      supported(browser, false)
+    def unsupported(names)
+      if names.is_a? Array
+        names.collect {|name| supported(name, false) }
+      else
+        supported(names, false)
+      end
     end
 
     def location(path)
