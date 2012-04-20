@@ -8,8 +8,14 @@ module Browsernizer
       @handler = lambda { }
     end
 
-    def supported(browser, version)
-      @supported << Browser.new(browser, version)
+    def supported(*args, &block)
+      if args.length == 2
+        @supported << Browser.new(args[0], args[1])
+      elsif block_given?
+        @supported << block
+      else
+        raise ArgumentError, "accepts either (browser, version) or block"
+      end
     end
 
     def location(path)
