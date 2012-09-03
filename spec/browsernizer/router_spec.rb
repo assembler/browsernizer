@@ -8,8 +8,8 @@ describe Browsernizer::Router do
     Browsernizer::Router.new(app) do |config|
       config.supported "Firefox", false
       config.supported "Chrome", "7.1"
-      config.supported do |agent|
-        !(agent.browser == "Safari" && agent.mobile?)
+      config.supported do |browser|
+        !(browser.safari? && browser.mobile?)
       end
     end
   end

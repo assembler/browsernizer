@@ -47,12 +47,12 @@ If you wish to completely prevent some browsers from accessing website
     config.supported "Internet Explorer", false
 
 There is also an option to provide block for more advanced checking.
-[UserAgent object](https://github.com/josh/useragent/tree/master/lib) will be
+[Browser object](https://github.com/fnando/browser/blob/master/lib/browser.rb) will be
 passed to it. If you wish to state that *mobile safari* is not supported, you
 can declare it like this:
 
-    config.supported do |agent|
-      !(agent.browser == "Safari" && agent.mobile?)
+    config.supported do |browser|
+      !(browser.name == "Safari" && browser.mobile?)
     end
 
 Specifying location is optional. If you prefer handling unsupported browsers on
@@ -85,14 +85,15 @@ You should specify browser name as a string. Here are the available options:
 And some less popular:
 
 * Android
-* webOS
 * BlackBerry
-* Symbian
-* Camino
-* Iceweasel
-* Seamonkey
+* iPad
+* iPhone
+* iPod Touch
+* PlayStation Portable
+* QuickTime
+* Apple CoreMedia
 
-Browser detection is done using [useragent gem](https://github.com/josh/useragent).
+Browser detection is done using [browser gem](https://github.com/fnando/browser).
 
 
 

@@ -13,8 +13,8 @@ module Browsernizer
       @env = env
       @env["browsernizer"] = {
         "supported" => true,
-        "browser" => agent.name.to_s,
-        "version" => agent.version.to_s
+        "browser" => browser.name.to_s,
+        "version" => browser.version.to_s
       }
       handle_request
     end
@@ -57,21 +57,21 @@ module Browsernizer
       @config.get_location && @config.get_location == @env["PATH_INFO"]
     end
 
-    def raw_agent
-      ::UserAgent.parse @env["HTTP_USER_AGENT"]
+    def raw_browser
+      ::Browser.new :ua => @env["HTTP_USER_AGENT"]
     end
 
-    def agent
-      Browser.new raw_agent.browser.to_s, raw_agent.version.to_s
+    def browser
+      Browser.new raw_browser.name.to_s, raw_browser.full_version.to_s
     end
 
     # supported by default
     def unsupported?
       @config.get_supported.any? do |requirement|
         supported = if requirement.respond_to?(:call)
-          requirement.call(raw_agent)
+          requirement.call(raw_browser)
         else
-          agent.meets?(requirement)
+          browser.meets?(requirement)
         end
         supported === false
       end

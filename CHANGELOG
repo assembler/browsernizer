@@ -1,0 +1,2 @@
+= Version 0.2.0
+  * ditched useragent, now using browser gem (backward compatibility might be broken)
