@@ -13,7 +13,7 @@ module Browsernizer
     end
 
     def <=>(other)
-      ([0]*6).zip(to_a, other.to_a).each do |dump, a, b|
+      ([0]*6).zip(to_a, [*other]).each do |dump, a, b|
         r = (a||0) <=> (b||0)
         return r unless r.zero?
       end
