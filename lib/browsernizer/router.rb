@@ -10,13 +10,13 @@ module Browsernizer
     end
 
     def call(env)
-      browser = get_browser(env)
+      raw_browser, browser = get_browsers(env)
       env["browsernizer"] = {
-        "supported" => supported?(env),
+        "supported" => supported?(raw_browser, browser),
         "browser" => browser.name.to_s,
         "version" => browser.version.to_s
       }
-      redirect_request(env) || @app.call(@env)
+      redirect_request(env) || @app.call(env)
     end
 
   private
@@ -24,8 +24,8 @@ module Browsernizer
     def redirect_request(env)
       return if path_excluded?(env)
       if !env["browsernizer"]["supported"]
-        return redirect_to_specified if @config.get_location && !on_redirection_path?
-      elsif on_redirection_path?
+        return redirect_to_specified if @config.get_location && !on_redirection_path?(env)
+      elsif on_redirection_path?(env)
         return redirect_to_root
       end
     end
@@ -42,24 +42,21 @@ module Browsernizer
       @config.excluded? env["PATH_INFO"]
     end
 
-    def on_redirection_path?
-      @config.get_location && @config.get_location == @env["PATH_INFO"]
+    def on_redirection_path?(env)
+      @config.get_location && @config.get_location == env["PATH_INFO"]
     end
 
-    def get_raw_browser(env)
-      ::Browser.new :ua => env["HTTP_USER_AGENT"]
-    end
-
-    def browser(env)
-      raw_browser = get_raw_browser(env)
-      Browser.new raw_browser.name.to_s, raw_browser.full_version.to_s
+    def get_browsers(env)
+      raw_browser = ::Browser.new :ua => env["HTTP_USER_AGENT"]
+      browser = Browsernizer::Browser.new raw_browser.name.to_s, raw_browser.full_version.to_s
+      [raw_browser, browser]
     end
 
     # supported by default
-    def supported?(env)
+    def supported?(raw_browser, browser)
       !@config.get_supported.any? do |requirement|
         supported = if requirement.respond_to?(:call)
-          requirement.call(get_raw_browser(env))
+          requirement.call(raw_browser)
         else
           browser.meets?(requirement)
         end
