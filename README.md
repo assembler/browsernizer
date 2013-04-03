@@ -1,5 +1,7 @@
 # Browsernizer
 
+[![Gem Version](https://badge.fury.io/rb/browsernizer.png)](http://badge.fury.io/rb/browsernizer)
+
 Want friendly "please upgrade your browser" page? This gem is for you.
 
 You can redirect your visitors to any page you like (static or dynamic).
