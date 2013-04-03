@@ -10,35 +10,24 @@ module Browsernizer
     end
 
     def call(env)
-      @env = env
-      @env["browsernizer"] = {
-        "supported" => true,
+      browser = get_browser(env)
+      env["browsernizer"] = {
+        "supported" => supported?(env),
         "browser" => browser.name.to_s,
         "version" => browser.version.to_s
       }
-      handle_request
+      redirect_request(env) || @app.call(@env)
     end
 
   private
-    def handle_request
-      @env["browsernizer"]["supported"] = false if unsupported?
 
-      catch(:response) do
-        if !path_excluded?
-          if unsupported?
-            if !on_redirection_path? && @config.get_location
-              throw :response, redirect_to_specified
-            end
-          elsif on_redirection_path?
-            throw :response, redirect_to_root
-          end
-        end
-        propagate_request
+    def redirect_request(env)
+      return if path_excluded?(env)
+      if !env["browsernizer"]["supported"]
+        return redirect_to_specified if @config.get_location && !on_redirection_path?
+      elsif on_redirection_path?
+        return redirect_to_root
       end
-    end
-
-    def propagate_request
-      @app.call(@env)
     end
 
     def redirect_to_specified
@@ -49,27 +38,28 @@ module Browsernizer
       [303, {"Content-Type" => "text/plain", "Location" => "/"}, []]
     end
 
-    def path_excluded?
-      @config.excluded? @env["PATH_INFO"]
+    def path_excluded?(env)
+      @config.excluded? env["PATH_INFO"]
     end
 
     def on_redirection_path?
       @config.get_location && @config.get_location == @env["PATH_INFO"]
     end
 
-    def raw_browser
-      ::Browser.new :ua => @env["HTTP_USER_AGENT"]
+    def get_raw_browser(env)
+      ::Browser.new :ua => env["HTTP_USER_AGENT"]
     end
 
-    def browser
+    def browser(env)
+      raw_browser = get_raw_browser(env)
       Browser.new raw_browser.name.to_s, raw_browser.full_version.to_s
     end
 
     # supported by default
-    def unsupported?
-      @config.get_supported.any? do |requirement|
+    def supported?(env)
+      !@config.get_supported.any? do |requirement|
         supported = if requirement.respond_to?(:call)
-          requirement.call(raw_browser)
+          requirement.call(get_raw_browser(env))
         else
           browser.meets?(requirement)
         end
