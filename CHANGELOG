@@ -1,2 +1,6 @@
+= Version 0.2.1
+  * Code cleanup by @Bertg
+  * Getting rid of warnings by @prowler
+
 = Version 0.2.0
   * ditched useragent, now using browser gem (backward compatibility might be broken)
