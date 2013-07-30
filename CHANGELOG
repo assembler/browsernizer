@@ -1,3 +1,6 @@
+= Version 0.2.2
+  * Relax version dependency of the 'browser' gem - by @adammck
+
 = Version 0.2.1
   * Code cleanup by @Bertg
   * Getting rid of warnings by @prowler
