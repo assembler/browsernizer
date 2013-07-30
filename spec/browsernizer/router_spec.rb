@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Browsernizer::Router do
 
-  let(:app) { mock() }
+  let(:app) { double }
 
   subject do
     Browsernizer::Router.new(app) do |config|
