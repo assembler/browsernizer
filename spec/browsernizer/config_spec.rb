@@ -8,19 +8,19 @@ describe Browsernizer::Config do
     it "defines new supported browser" do
       subject.supported "Chrome", "16.0"
       subject.supported "Firefox", "10.0"
-      subject.get_supported.should have(2).items
+      expect(subject.get_supported.size).to eq(2)
     end
 
     it "allows to unsupport browser by using false as version number" do
       subject.supported "Chrome", false
-      subject.get_supported[0].version.should be_false
+      expect(subject.get_supported[0].version).to be_falsey
     end
   end
 
   describe "location(path)" do
     it "sets the redirection path for unsupported browsers" do
       subject.location "foo.html"
-      subject.get_location.should == "foo.html"
+      expect(subject.get_location).to eq("foo.html")
     end
   end
 
@@ -29,11 +29,11 @@ describe Browsernizer::Config do
       subject.exclude %r{^/assets}
       subject.exclude "/foo/bar.html"
 
-      subject.excluded?("/assets/foo.jpg").should be_true
-      subject.excluded?("/Assets/foo.jpg").should be_false
-      subject.excluded?("/prefix/assets/foo.jpg").should be_false
-      subject.excluded?("/foo/bar.html").should be_true
-      subject.excluded?("/foo/bar2.html").should be_false
+      expect(subject.excluded?("/assets/foo.jpg")).to be_truthy
+      expect(subject.excluded?("/Assets/foo.jpg")).to be_falsey
+      expect(subject.excluded?("/prefix/assets/foo.jpg")).to be_falsey
+      expect(subject.excluded?("/foo/bar.html")).to be_truthy
+      expect(subject.excluded?("/foo/bar2.html")).to be_falsey
     end
   end
 

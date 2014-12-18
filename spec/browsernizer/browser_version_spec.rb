@@ -5,20 +5,20 @@ describe Browsernizer::BrowserVersion do
   describe "Comparable" do
 
     it "is greater" do
-     version("2").should > version("1")
-     version("1.1").should > version("1")
-     version("1.1").should > version("1.0")
-     version("2").should > version("1.9")
+     expect(version("2")).to be > version("1")
+     expect(version("1.1")).to be > version("1")
+     expect(version("1.1")).to be > version("1.0")
+     expect(version("2")).to be > version("1.9")
    end
 
     it "is equal" do
-      version("1").should == version("1")
-      version("1").should == version("1.0")
-      version("1.0").should == version("1")
+      expect(version("1")).to eq(version("1"))
+      expect(version("1")).to eq(version("1.0"))
+      expect(version("1.0")).to eq(version("1"))
     end
 
     it "handles strings" do
-      version("1.0").should == version("1.0.alpha")
+      expect(version("1.0")).to eq(version("1.0.alpha"))
     end
 
   end

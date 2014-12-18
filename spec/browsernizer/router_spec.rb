@@ -22,11 +22,11 @@ describe Browsernizer::Router do
   end
 
   context "All Good" do
-    it "propagates requrest with updated env" do
-      app.should_receive(:call).with do |env|
-        env['browsernizer']['supported'].should be_true
-        env['browsernizer']['browser'].should == "Chrome"
-        env['browsernizer']['version'].should == "7.1.1"
+    it "propagates request with updated env" do
+      expect(app).to receive(:call) do |env|
+        expect(env['browsernizer']['supported']).to be_truthy
+        expect(env['browsernizer']['browser']).to eq("Chrome")
+        expect(env['browsernizer']['version']).to eq("7.1.1")
       end
       subject.call(default_env)
     end
@@ -35,9 +35,9 @@ describe Browsernizer::Router do
 
   shared_examples "unsupported browser" do
     context "location not set" do
-      it "propagates requrest with updated env" do
-        app.should_receive(:call).with do |env|
-          env['browsernizer']['supported'].should be_false
+      it "propagates request with updated env" do
+        expect(app).to receive(:call) do |env|
+          expect(env['browsernizer']['supported']).to be_falsey
         end
         subject.call(@env)
       end
@@ -49,14 +49,14 @@ describe Browsernizer::Router do
       end
 
       it "prevents propagation" do
-        app.should_not_receive(:call)
+        expect(app).not_to receive(:call)
         subject.call(@env)
       end
 
       it "redirects to proper location" do
         response = subject.call(@env)
-        response[0].should == 307
-        response[1]["Location"].should == "/browser.html"
+        expect(response[0]).to eq(307)
+        expect(response[1]["Location"]).to eq("/browser.html")
       end
 
       context "Excluded path" do
@@ -67,7 +67,7 @@ describe Browsernizer::Router do
           })
         end
         it "propagates request" do
-          app.should_receive(:call).with(@env)
+          expect(app).to receive(:call).with(@env)
           subject.call(@env)
         end
       end
@@ -78,9 +78,9 @@ describe Browsernizer::Router do
             "PATH_INFO" => "/browser.html"
           })
         end
-        it "propagates requrest with updated env" do
-          app.should_receive(:call).with do |env|
-            env['browsernizer']['supported'].should be_false
+        it "propagates request with updated env" do
+          expect(app).to receive(:call) do |env|
+            expect(env['browsernizer']['supported']).to be_falsey
           end
           subject.call(@env)
         end
