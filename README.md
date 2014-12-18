@@ -57,6 +57,17 @@ can declare it like this:
       !(browser.name == "Safari" && browser.mobile?)
     end
 
+The block should return false to block the browser, true to allow it, and nil if it
+cannot decide. This way you can make any arbitrary User-Agent explicitly allowed,
+even if its version would have been blocked otherwise:
+
+    config.supported do |browser|
+      true if browser.user_agent.include?('Linux')
+    end
+
+Please note, that the order is important, thus the first block or requirement returning
+a boolean wins.
+
 Specifying location is optional. If you prefer handling unsupported browsers on
 your own, you can access browsernizer info from `request.env['browsernizer']`
 within your controller.

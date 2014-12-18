@@ -6,6 +6,9 @@ describe Browsernizer::Router do
 
   subject do
     Browsernizer::Router.new(app) do |config|
+      config.supported do |browser|
+        true if browser.user_agent.include?('Spec')
+      end
       config.supported "Firefox", false
       config.supported "Chrome", "7.1"
       config.supported do |browser|
@@ -113,6 +116,21 @@ describe Browsernizer::Router do
       })
     end
     it_behaves_like "unsupported browser"
+  end
+
+  context "Supported by proc" do
+    before do
+      @env = default_env.merge({
+        "HTTP_USER_AGENT" => firefox_agent("10.0.1") + ' Spec'
+      })
+    end
+
+    it "propagates request" do
+      expect(app).to receive(:call) do |env|
+        expect(env['browsernizer']['supported']).to be_truthy
+      end
+      subject.call(@env)
+    end
   end
 
   def chrome_agent(version)

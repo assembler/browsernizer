@@ -54,13 +54,14 @@ module Browsernizer
 
     # supported by default
     def supported?(raw_browser, browser)
-      !@config.get_supported.any? do |requirement|
+      @config.get_supported.inject(true) do |default, requirement|
         supported = if requirement.respond_to?(:call)
           requirement.call(raw_browser)
         else
           browser.meets?(requirement)
         end
-        supported === false
+        break supported unless supported.nil?
+        default
       end
     end
   end
