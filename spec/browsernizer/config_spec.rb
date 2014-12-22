@@ -13,7 +13,7 @@ describe Browsernizer::Config do
 
     it "allows to unsupport browser by using false as version number" do
       subject.supported "Chrome", false
-      expect(subject.get_supported[0].version).to be_falsey
+      expect(subject.get_supported[0].version).to be_false
     end
   end
 
@@ -29,11 +29,11 @@ describe Browsernizer::Config do
       subject.exclude %r{^/assets}
       subject.exclude "/foo/bar.html"
 
-      expect(subject.excluded?("/assets/foo.jpg")).to be_truthy
-      expect(subject.excluded?("/Assets/foo.jpg")).to be_falsey
-      expect(subject.excluded?("/prefix/assets/foo.jpg")).to be_falsey
-      expect(subject.excluded?("/foo/bar.html")).to be_truthy
-      expect(subject.excluded?("/foo/bar2.html")).to be_falsey
+      expect(subject.excluded?("/assets/foo.jpg")).to be_true
+      expect(subject.excluded?("/Assets/foo.jpg")).to be_false
+      expect(subject.excluded?("/prefix/assets/foo.jpg")).to be_false
+      expect(subject.excluded?("/foo/bar.html")).to be_true
+      expect(subject.excluded?("/foo/bar2.html")).to be_false
     end
   end
 

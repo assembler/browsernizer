@@ -27,7 +27,7 @@ describe Browsernizer::Router do
   context "All Good" do
     it "propagates request with updated env" do
       expect(app).to receive(:call) do |env|
-        expect(env['browsernizer']['supported']).to be_truthy
+        expect(env['browsernizer']['supported']).to be_true
         expect(env['browsernizer']['browser']).to eq("Chrome")
         expect(env['browsernizer']['version']).to eq("7.1.1")
       end
@@ -40,7 +40,7 @@ describe Browsernizer::Router do
     context "location not set" do
       it "propagates request with updated env" do
         expect(app).to receive(:call) do |env|
-          expect(env['browsernizer']['supported']).to be_falsey
+          expect(env['browsernizer']['supported']).to be_false
         end
         subject.call(@env)
       end
@@ -83,7 +83,7 @@ describe Browsernizer::Router do
         end
         it "propagates request with updated env" do
           expect(app).to receive(:call) do |env|
-            expect(env['browsernizer']['supported']).to be_falsey
+            expect(env['browsernizer']['supported']).to be_false
           end
           subject.call(@env)
         end
@@ -127,7 +127,7 @@ describe Browsernizer::Router do
 
     it "propagates request" do
       expect(app).to receive(:call) do |env|
-        expect(env['browsernizer']['supported']).to be_truthy
+        expect(env['browsernizer']['supported']).to be_true
       end
       subject.call(@env)
     end
