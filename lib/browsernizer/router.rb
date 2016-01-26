@@ -47,8 +47,8 @@ module Browsernizer
     end
 
     def get_browsers(env)
-      raw_browser = ::Browser.new :ua => env["HTTP_USER_AGENT"]
-      browser = Browsernizer::Browser.new raw_browser.name.to_s, raw_browser.full_version.to_s
+      raw_browser = Clients::Info.new :user_agent => env["HTTP_USER_AGENT"]
+      browser = Browsernizer::Browser.new raw_browser.browser_name, raw_browser.browser_version
       [raw_browser, browser]
     end
 

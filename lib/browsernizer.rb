@@ -4,4 +4,4 @@ require "browsernizer/config"
 require "browsernizer/router"
 require "browsernizer/version"
 
-require 'browser'
+require 'clients-babbel'
