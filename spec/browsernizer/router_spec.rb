@@ -7,19 +7,19 @@ describe Browsernizer::Router do
   subject do
     Browsernizer::Router.new(app) do |config|
       config.supported do |browser|
-        true if browser.user_agent.include?('Spec')
+        true if browser.user_agent_string.include?('Spec')
       end
       config.supported "Firefox", false
       config.supported "Chrome", "7.1"
       config.supported do |browser|
-        !(browser.safari? && browser.mobile?)
+        !browser.mobile_safari?
       end
     end
   end
 
   let(:default_env) do
     {
-      "HTTP_USER_AGENT" => chrome_agent("7.1.1"),
+      "HTTP_USER_AGENT" => chrome_agent("7.2"),
       "PATH_INFO" => "/index"
     }
   end
@@ -27,9 +27,9 @@ describe Browsernizer::Router do
   context "All Good" do
     it "propagates request with updated env" do
       expect(app).to receive(:call) do |env|
-        expect(env['browsernizer']['supported']).to be_true
+        expect(env['browsernizer']['supported']).to be true
         expect(env['browsernizer']['browser']).to eq("Chrome")
-        expect(env['browsernizer']['version']).to eq("7.1.1")
+        expect(env['browsernizer']['version']).to eq("7.2")
       end
       subject.call(default_env)
     end
@@ -40,7 +40,7 @@ describe Browsernizer::Router do
     context "location not set" do
       it "propagates request with updated env" do
         expect(app).to receive(:call) do |env|
-          expect(env['browsernizer']['supported']).to be_false
+          expect(env['browsernizer']['supported']).to be false
         end
         subject.call(@env)
       end
@@ -83,7 +83,7 @@ describe Browsernizer::Router do
         end
         it "propagates request with updated env" do
           expect(app).to receive(:call) do |env|
-            expect(env['browsernizer']['supported']).to be_false
+            expect(env['browsernizer']['supported']).to be false
           end
           subject.call(@env)
         end
@@ -127,7 +127,7 @@ describe Browsernizer::Router do
 
     it "propagates request" do
       expect(app).to receive(:call) do |env|
-        expect(env['browsernizer']['supported']).to be_true
+        expect(env['browsernizer']['supported']).to be true
       end
       subject.call(@env)
     end
@@ -142,7 +142,7 @@ describe Browsernizer::Router do
   end
 
   def mobile_safari_agent
-    "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420.1 (KHTML, like Gecko) Version/3.0 Mobile/4A102 Safari/419"
+    "Mozilla/5.0 (Linux; U; Android 4.0.3; ko-kr; LG-L160L Build/IML74K) AppleWebkit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30"
   end
 
 end
