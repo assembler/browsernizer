@@ -54,7 +54,7 @@ passed to it. If you wish to state that *mobile safari* is not supported, you
 can declare it like this:
 
     config.supported do |browser|
-      !(browser.name == "Safari" && browser.mobile?)
+      !(browser.name == "Safari" && browser.device.mobile?)
     end
 
 The block should return false to block the browser, true to allow it, and nil if it
@@ -62,7 +62,7 @@ cannot decide. This way you can make any arbitrary User-Agent explicitly allowed
 even if its version would have been blocked otherwise:
 
     config.supported do |browser|
-      true if browser.user_agent.include?('Linux')
+      true if browser.ua.include?('Linux')
     end
 
 Please note, that the order is important, thus the first block or requirement returning
