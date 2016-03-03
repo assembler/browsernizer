@@ -7,12 +7,12 @@ describe Browsernizer::Router do
   subject do
     Browsernizer::Router.new(app) do |config|
       config.supported do |browser|
-        true if browser.user_agent.include?('Spec')
+        true if browser.ua.include?('Spec')
       end
       config.supported "Firefox", false
       config.supported "Chrome", "7.1"
       config.supported do |browser|
-        !(browser.safari? && browser.mobile?)
+        !(browser.safari? && browser.device.mobile?)
       end
     end
   end
